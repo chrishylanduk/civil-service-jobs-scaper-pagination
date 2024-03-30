@@ -2,6 +2,7 @@ package com.chrishyland.wholewebsitescraper.infrastructure;
 
 import com.chrishyland.wholewebsitescraper.domain.entity.SitemapEntry;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryFetch;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +14,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 public class SitemapEntryFetchImpl implements SitemapEntryFetch {
 
     @Override
@@ -26,9 +27,7 @@ public class SitemapEntryFetchImpl implements SitemapEntryFetch {
 
         Instant currentTime = Instant.now();
 
-        System.out.println("Sitemap scrape page title is: " + doc.title());
-
-        System.out.println("Found " + pages.size() + " elements in the sitemap");
+        log.info("Found {} elements in the sitemap", pages.size());
 
         for (Element page : pages) {
             Element loc = page.getElementsByTag("loc").first();

@@ -42,7 +42,7 @@ public class WholeWebsiteScraperCommandLineRunner implements CommandLineRunner {
                     try {
                         Thread.sleep(120000);
                     } catch (InterruptedException ie) {
-                        System.out.println("Interrupted during wait before retry" + ie);
+                        log.error("Interrupted during wait before retry", ie);
                         break;
                     }
                 } else {

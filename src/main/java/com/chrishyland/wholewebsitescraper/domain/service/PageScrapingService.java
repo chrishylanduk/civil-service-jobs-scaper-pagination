@@ -7,6 +7,7 @@ import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryFetch;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryRepository;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.URLScraper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @AllArgsConstructor
 public class PageScrapingService {
 
@@ -23,7 +25,7 @@ public class PageScrapingService {
     private URLScraper urlScraper;
 
     public void scrapePagesInSitemap(String sitemapURL) throws IOException {
-        System.out.println("Started scrape pages");
+        log.info("Started scrape pages");
         List<SitemapEntry> currentSitemapEntries = sitemapEntryFetch.listAllSitemapEntries(sitemapURL);
 
         List<SitemapEntry> savedSitemapEntries = sitemapEntryRepository.storeSitemapEntries(currentSitemapEntries);
@@ -33,11 +35,11 @@ public class PageScrapingService {
 
     public void scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List<SitemapEntry> sitemapEntries) {
         for (SitemapEntry sitemapEntry : sitemapEntries) {
-            System.out.println("Starting scrape of " + sitemapEntry.getUrl());
+            log.info("Starting scrape of {}", sitemapEntry.getUrl());
             Optional<PageScrape> existingPageScrape = pageScrapeRepository.retrieveLatestScrapeWithGivenURLAndDateUpdated(sitemapEntry.getUrl(), sitemapEntry.getUpdatedTime());
 
             if (existingPageScrape.isPresent()) {
-                System.out.println("Already have this scrape");
+                log.info("Already have this scrape");
                 sitemapEntryRepository.saveSitemapEntry(sitemapEntry.toBuilder()
                         .scrapeIsNew(false)
                         .scrapeId(existingPageScrape.get().getScrapeId())
@@ -50,7 +52,7 @@ public class PageScrapingService {
                             .scrapeId(savedPageScrape.getScrapeId())
                             .build());
                 } catch (IOException | ParseException e) {
-                    System.out.println(e.getMessage());
+                    log.error("Error getting HTML of url", e);
                 }
             }
         }

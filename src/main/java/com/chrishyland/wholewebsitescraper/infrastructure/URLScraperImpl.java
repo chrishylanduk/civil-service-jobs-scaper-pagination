@@ -1,6 +1,7 @@
 package com.chrishyland.wholewebsitescraper.infrastructure;
 
 import com.chrishyland.wholewebsitescraper.domain.interfaces.URLScraper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.HttpRequestRetryStrategy;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URI;
 
+@Slf4j
 @Component
 public class URLScraperImpl implements URLScraper {
     private final CloseableHttpClient httpClient = HttpClientBuilder
@@ -60,13 +62,13 @@ public class URLScraperImpl implements URLScraper {
 
         @Override
         public TimeValue getRetryInterval(HttpResponse response, int execCount, HttpContext context) {
-            System.out.println("Retrying HTTP request after " + retryInterval.toString());
+            log.info("Retrying HTTP request after " + retryInterval.toString());
             return retryInterval;
         }}
 
     @Override
     public String getHtmlOfUrl(String url) throws IOException, ParseException {
-        System.out.println("Scraping " + url);
+        log.info("Getting HTML of {}", url);
         HttpGet httpGet = new HttpGet(URI.create(url));
 
         try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
