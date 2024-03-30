@@ -19,13 +19,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: Wandalen/wretry.action@master
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          action: actions/setup-java@v4
+          with: |
+            java-version: '17'
+            distribution: 'adopt'
+          attempt_limit: 3
+          attempt_delay: 120000
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        uses: Wandalen/wretry.action@master
+        with:
+          command: mvn -B package --file pom.xml -DskipTests
+          attempt_limit: 3
+          attempt_delay: 120000
 
       - name: Run Application
-        run: java -jar target/whole-website-scraper-0.0.1.jar
+        uses: Wandalen/wretry.action@master
+        with:
+          command: java -jar target/whole-website-scraper-0.0.1.jar
+          attempt_limit: 3
+          attempt_delay: 120000
