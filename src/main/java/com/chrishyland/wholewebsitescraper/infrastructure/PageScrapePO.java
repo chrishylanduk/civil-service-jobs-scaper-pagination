@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Builder
@@ -17,9 +17,11 @@ import java.time.LocalDateTime;
 public class PageScrapePO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scrape_id;
+    private Long scrapeId;
+    @Column(columnDefinition = "TEXT")
     private String url;
+    @Column(columnDefinition = "TEXT")
     private String html;
-    private LocalDateTime updatedTime;
-    private LocalDateTime scrapedTime;
+    private Instant updatedTime;
+    private Instant scrapedTime;
 }

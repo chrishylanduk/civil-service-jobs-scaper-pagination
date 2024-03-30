@@ -8,8 +8,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class SitemapEntryFetchImpl implements SitemapEntryFetch {
         Document doc = Jsoup.connect(sitemapUrl).get();
         Elements pages = doc.getElementsByTag("url");
 
-        LocalDateTime currentTime = LocalDateTime.now();
+        Instant currentTime = Instant.now();
 
         System.out.println("Sitemap scrape page title is: " + doc.title());
 
@@ -38,7 +39,7 @@ public class SitemapEntryFetchImpl implements SitemapEntryFetch {
 
                 if (lastmod != null) {
                     DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-                    LocalDateTime updatedTime = LocalDateTime.parse(lastmod.text(), formatter);
+                    Instant updatedTime = OffsetDateTime.parse(lastmod.text(), formatter).toInstant();
 
                     sitemapEntryList.add(SitemapEntry.builder().url(url).updatedTime(updatedTime).checkedTime(currentTime).build());
                 }

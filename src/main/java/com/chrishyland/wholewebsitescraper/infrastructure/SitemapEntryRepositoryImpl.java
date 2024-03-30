@@ -13,30 +13,45 @@ public class SitemapEntryRepositoryImpl implements SitemapEntryRepository {
     private SitemapEntryPOJPARepository repository;
 
     @Override
-    public void storeSitemapEntries(List<SitemapEntry> sitemapEntries) {
+    public List<SitemapEntry> storeSitemapEntries(List<SitemapEntry> sitemapEntries) {
         List<SitemapEntryPO> sitemapEntriesPO = sitemapEntries.stream()
                 .map(this::sitemapEntryToSitemapEntryPO)
                 .collect(Collectors.toList());
-        repository.saveAll(sitemapEntriesPO);
+        List<SitemapEntryPO> savedSitemapEntryPOs = repository.saveAll(sitemapEntriesPO);
+        List<SitemapEntry> savedSitemapEntries = savedSitemapEntryPOs.stream()
+                .map(this::sitemapEntryPOToSitemapEntry)
+                .collect(Collectors.toList());
+
+        return savedSitemapEntries;
     }
 
     @Override
-    public void replaceLatestSitemapEntryWithSameUrl(SitemapEntry replacementSitemapEntry) {
-        SitemapEntryPO replacementSitemapEntryPO = sitemapEntryToSitemapEntryPO(replacementSitemapEntry);
+    public SitemapEntry saveSitemapEntry(SitemapEntry sitemapEntry) {
+        SitemapEntryPO sitemapEntryPO = sitemapEntryToSitemapEntryPO(sitemapEntry);
 
-        SitemapEntryPO existingEntryPO = repository.findTopByUrlOrderByIdDesc(replacementSitemapEntryPO.getUrl());
-        replacementSitemapEntryPO = replacementSitemapEntryPO.toBuilder().id(existingEntryPO.getId()).build();
-
-        repository.save(replacementSitemapEntryPO);
+        SitemapEntryPO savedSitemapEntryPO = repository.save(sitemapEntryPO);
+        return sitemapEntryPOToSitemapEntry(savedSitemapEntryPO);
     }
 
     public SitemapEntryPO sitemapEntryToSitemapEntryPO(SitemapEntry sitemapEntry) {
         return SitemapEntryPO.builder()
+                .sitemapEntryId(sitemapEntry.getSitemapEntryId())
                 .url(sitemapEntry.getUrl())
                 .updatedTime(sitemapEntry.getUpdatedTime())
                 .checkedTime(sitemapEntry.getCheckedTime())
-                .scrape_id(sitemapEntry.getScrape_id())
-                .scrape_is_new(sitemapEntry.getScrape_is_new())
+                .scrapeId(sitemapEntry.getScrapeId())
+                .scrapeIsNew(sitemapEntry.getScrapeIsNew())
+                .build();
+    }
+
+    public SitemapEntry sitemapEntryPOToSitemapEntry(SitemapEntryPO sitemapEntryPO) {
+        return SitemapEntry.builder()
+                .sitemapEntryId(sitemapEntryPO.getSitemapEntryId())
+                .url(sitemapEntryPO.getUrl())
+                .updatedTime(sitemapEntryPO.getUpdatedTime())
+                .checkedTime(sitemapEntryPO.getCheckedTime())
+                .scrapeId(sitemapEntryPO.getScrapeId())
+                .scrapeIsNew(sitemapEntryPO.getScrapeIsNew())
                 .build();
     }
 }

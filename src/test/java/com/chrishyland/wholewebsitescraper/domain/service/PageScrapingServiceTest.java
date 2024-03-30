@@ -11,10 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class PageScrapingServiceTest {
@@ -27,29 +29,33 @@ class PageScrapingServiceTest {
 
 
     @Test
-    void findsExistingScrapeWithSameUpdatedTimeIfPresent() {
-        LocalDateTime decemberTwelfth2022 = LocalDateTime.of(2022, 12, 12, 12, 12);
+    void doesNotFetchPageHtmlIfExistingScrapeWithSameUpdatedTimePresent() {
+        Instant decemberTwelfth2022 = ZonedDateTime.of(2022, 12, 12, 12, 12, 0, 0, ZoneId.of("UTC")).toInstant();
         SitemapEntry sitemapEntry = SitemapEntry.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
         PageScrape pageScrape = PageScrape.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
-        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeForUrl("https://www.example.com")).thenReturn(Optional.of(pageScrape));
+        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeWithGivenURLAndDateUpdated("https://www.example.com", decemberTwelfth2022)).thenReturn(Optional.of(pageScrape));
 
-        Boolean existingScrapePresent = pageScrapingService.getExistingPageScrapeMatchingSitemapEntryUrlAndUpdatedTime(sitemapEntry, mockPageScrapeRepository).isPresent();
+        pageScrapingService.scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List.of(sitemapEntry));
 
-        assertEquals(true, existingScrapePresent);
-
+        try {
+            Mockito.verify(mockURLScraper, Mockito.never()).getHtmlOfUrl(Mockito.anyString());
+        } catch (IOException | InterruptedException e) {
+        }
     }
 
     @Test
-    void doesNotFindExistingScrapeWithSameUpdatedTimeIfNotPresent() {
-        LocalDateTime decemberTwelfth2022 = LocalDateTime.of(2022, 12, 12, 12, 12);
-        LocalDateTime decemberEleventh2022 = LocalDateTime.of(2022, 12, 11, 12, 12);
+    void doesFetchPageHtmlIfExistingScrapeWithSameUpdatedTimeNotPresent() {
+        Instant decemberTwelfth2022 = ZonedDateTime.of(2022, 12, 12, 12, 12, 0, 0, ZoneId.of("UTC")).toInstant();
         SitemapEntry sitemapEntry = SitemapEntry.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
-        PageScrape pageScrape = PageScrape.builder().url("https://www.example.com").updatedTime(decemberEleventh2022).build();
-        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeForUrl("https://www.example.com")).thenReturn(Optional.of(pageScrape));
+        PageScrape pageScrape = PageScrape.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
+        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeWithGivenURLAndDateUpdated("https://www.example.com", decemberTwelfth2022)).thenReturn(Optional.empty());
+        Mockito.when(mockPageScrapeRepository.savePageScrape(Mockito.any(PageScrape.class))).thenReturn(pageScrape);
 
-        Boolean existingScrapePresent = pageScrapingService.getExistingPageScrapeMatchingSitemapEntryUrlAndUpdatedTime(sitemapEntry, mockPageScrapeRepository).isPresent();
+        pageScrapingService.scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List.of(sitemapEntry));
 
-        assertEquals(false, existingScrapePresent);
+        try {
+            Mockito.verify(mockURLScraper).getHtmlOfUrl(Mockito.anyString());
+        } catch (IOException | InterruptedException e) {
+        }
     }
-
 }

@@ -9,7 +9,7 @@ import com.chrishyland.wholewebsitescraper.domain.interfaces.URLScraper;
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,34 +21,32 @@ public class PageScrapingService {
     private PageScrapeRepository pageScrapeRepository;
     private URLScraper urlScraper;
 
-    public void scrapePages(String sitemapURL) throws IOException {
+    public void scrapePagesInSitemap(String sitemapURL) throws IOException {
         System.out.println("Started scrape pages");
         List<SitemapEntry> currentSitemapEntries = sitemapEntryFetch.listAllSitemapEntries(sitemapURL);
 
-        sitemapEntryRepository.storeSitemapEntries(currentSitemapEntries);
+        List<SitemapEntry> savedSitemapEntries = sitemapEntryRepository.storeSitemapEntries(currentSitemapEntries);
 
-        for (SitemapEntry sitemapEntry : currentSitemapEntries) {
+        scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(savedSitemapEntries);
+    }
+
+    public void scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List<SitemapEntry> sitemapEntries) {
+        for (SitemapEntry sitemapEntry : sitemapEntries) {
             System.out.println("Starting scrape of " + sitemapEntry.getUrl());
-            Optional<PageScrape> existingPageScrape = getExistingPageScrapeMatchingSitemapEntryUrlAndUpdatedTime(sitemapEntry, pageScrapeRepository);
+            Optional<PageScrape> existingPageScrape = pageScrapeRepository.retrieveLatestScrapeWithGivenURLAndDateUpdated(sitemapEntry.getUrl(), sitemapEntry.getUpdatedTime());
 
             if (existingPageScrape.isPresent()) {
                 System.out.println("Already have this scrape");
-                sitemapEntryRepository.replaceLatestSitemapEntryWithSameUrl(sitemapEntry.toBuilder()
-                        .scrape_is_new(false)
+                sitemapEntryRepository.saveSitemapEntry(sitemapEntry.toBuilder()
+                        .scrapeIsNew(false)
+                        .scrapeId(existingPageScrape.get().getScrapeId())
                         .build());
             } else {
                 try {
-                    String html = urlScraper.getHtmlOfUrl(sitemapEntry.getUrl());
-
-                    PageScrape pageScrape = PageScrape.builder()
-                            .url(sitemapEntry.getUrl())
-                            .scrapedTime(LocalDateTime.now())
-                            .html(html)
-                            .updatedTime(sitemapEntry.getUpdatedTime())
-                            .build();
-                    pageScrapeRepository.storePageScrape(pageScrape);
-                    sitemapEntryRepository.replaceLatestSitemapEntryWithSameUrl(sitemapEntry.toBuilder()
-                            .scrape_is_new(true)
+                    PageScrape savedPageScrape = scrapeAndSavePageFromSitemapEntry(sitemapEntry);
+                    sitemapEntryRepository.saveSitemapEntry(sitemapEntry.toBuilder()
+                            .scrapeIsNew(true)
+                            .scrapeId(savedPageScrape.getScrapeId())
                             .build());
                 } catch (IOException | InterruptedException e) {
                     System.out.println(e.getMessage());
@@ -57,14 +55,16 @@ public class PageScrapingService {
         }
     }
 
-    public Optional<PageScrape> getExistingPageScrapeMatchingSitemapEntryUrlAndUpdatedTime(SitemapEntry sitemapEntry, PageScrapeRepository pageScrapeRepository) {
-        //TODO: This method adapted from another, should now amend the db query so isn't necessarily 'latest'
-        Optional<PageScrape> latestPageScrapeOptional = pageScrapeRepository.retrieveLatestScrapeForUrl(sitemapEntry.getUrl());
+    private PageScrape scrapeAndSavePageFromSitemapEntry(SitemapEntry sitemapEntry) throws IOException, InterruptedException {
+        String html = urlScraper.getHtmlOfUrl(sitemapEntry.getUrl());
 
-        if (latestPageScrapeOptional.isPresent() && latestPageScrapeOptional.get().getUpdatedTime().isEqual(sitemapEntry.getUpdatedTime())) {
-            return latestPageScrapeOptional;
-        } else {
-            return Optional.empty();
-        }
+        PageScrape pageScrape = PageScrape.builder()
+                .url(sitemapEntry.getUrl())
+                .scrapedTime(Instant.now())
+                .html(html)
+                .updatedTime(sitemapEntry.getUpdatedTime())
+                .build();
+        PageScrape savedPageScrape = pageScrapeRepository.savePageScrape(pageScrape);
+        return savedPageScrape;
     }
 }

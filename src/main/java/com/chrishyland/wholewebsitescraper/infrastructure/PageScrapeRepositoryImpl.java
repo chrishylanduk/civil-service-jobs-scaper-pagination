@@ -3,6 +3,8 @@ package com.chrishyland.wholewebsitescraper.infrastructure;
 import com.chrishyland.wholewebsitescraper.domain.entity.PageScrape;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.PageScrapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import java.time.Instant;
 
 import java.util.Optional;
 
@@ -12,20 +14,20 @@ public class PageScrapeRepositoryImpl implements PageScrapeRepository {
     private PageScrapePOJPARepository repository;
 
     @Override
-    public void storePageScrape(PageScrape pageScrape) {
+    public PageScrape savePageScrape(PageScrape pageScrape) {
         PageScrapePO pageScrapePO = pageScrapeToPageScrapePO(pageScrape);
-        repository.save(pageScrapePO);
+        PageScrapePO savedPageScrapePO = repository.save(pageScrapePO);
+        return pageScrapePOToPageScrape(savedPageScrapePO);
     }
 
     @Override
-    public Optional<PageScrape> retrieveLatestScrapeForUrl(String url) {
-        PageScrapePO pageScrapePO = repository.findTopByUrlOrderByUpdatedTimeDesc(url);
+    public Optional<PageScrape> retrieveLatestScrapeWithGivenURLAndDateUpdated(String url, Instant updatedTime) {
+        PageScrapePO pageScrapePO = repository.findTopByUrlAndUpdatedTimeOrderByScrapeIdDesc(url, updatedTime);
         if (pageScrapePO == null) {
             return Optional.empty();
         } else {
             return Optional.of(pageScrapePOToPageScrape(pageScrapePO));
         }
-
     }
 
     public PageScrapePO pageScrapeToPageScrapePO(PageScrape pageScrape) {

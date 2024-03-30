@@ -24,7 +24,7 @@ public class WholeWebsiteScraperCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        pageScrapingService.scrapePages(System.getenv("SITEMAP_URL"));
+        pageScrapingService.scrapePagesInSitemap(System.getenv("SITEMAP_URL"));
     }
 
 }

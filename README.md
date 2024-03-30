@@ -14,6 +14,6 @@ It is designed for cases where regular scraping is important, but the structure 
 Four environment variables need to be set:
 
 1. `SITEMAP_URL` - URL to XML sitemap, e.g. `https://www.civilservicejobs.service.gov.uk/sitemap.xml`
-2. `DATABASE_URL`
-3. `DATABASE_USERNAME`
-4. `DATABASE_PASSWORD` 
+2. `DATABASE_URL` - URL to PostgreSQL database, e.g. `postgresql://localhost:5432/mydatabase`
+3. `DATABASE_USERNAME` - PostgreSQL database username
+4. `DATABASE_PASSWORD` - PostgreSQL database password

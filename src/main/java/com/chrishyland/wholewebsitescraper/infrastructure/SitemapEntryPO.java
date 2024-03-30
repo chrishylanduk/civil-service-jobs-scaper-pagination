@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Builder(toBuilder = true)
@@ -16,12 +16,13 @@ import java.time.LocalDateTime;
 @Table(name = "sitemap_entries")
 public class SitemapEntryPO {
     @Id
+    @SequenceGenerator(name = "id_generator", sequenceName = "sitemap_entries_seq", initialValue = 1, allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_generator")
-    @SequenceGenerator(name = "id_generator", sequenceName = "sitemap_entries_seq", allocationSize = 50)
-    private Long id;
+    private Long sitemapEntryId;
+    @Column(columnDefinition = "TEXT")
     private String url;
-    private LocalDateTime updatedTime;
-    private LocalDateTime checkedTime;
-    private int scrape_id;
-    private Boolean scrape_is_new;
+    private Instant updatedTime;
+    private Instant checkedTime;
+    private Long scrapeId;
+    private Boolean scrapeIsNew;
 }
