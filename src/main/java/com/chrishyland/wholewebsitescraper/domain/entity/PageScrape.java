@@ -2,6 +2,7 @@ package com.chrishyland.wholewebsitescraper.domain.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+
 import java.time.Instant;
 
 @Builder

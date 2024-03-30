@@ -1,13 +1,16 @@
 # Regular whole website scraper by sitemap
 
 ## Description
-A Java application which, when pointed to an XML sitemap and a PostgreSQL database, stores the list of all pages present that have a "lastmod" property, and a full HTML dump of each page.
+
+A Java application which, when pointed to an XML sitemap and a PostgreSQL database, stores the list of all pages present
+that have a "lastmod" property, and a full HTML dump of each page.
 
 If it's re-run, it only re-stores a page's HTML if "lastmod" has changed.
 
 A GitHub Action workflow is included that runs it every 1AM UTC.
 
-It is designed for cases where regular scraping is important, but the structure of pages may vary over time, hence the full HTML dump.
+It is designed for cases where regular scraping is important, but the structure of pages may vary over time, hence the
+full HTML dump.
 
 ## Usage
 

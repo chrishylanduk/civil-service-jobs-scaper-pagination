@@ -3,8 +3,8 @@ package com.chrishyland.wholewebsitescraper.infrastructure;
 import com.chrishyland.wholewebsitescraper.domain.entity.PageScrape;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.PageScrapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.time.Instant;
 
+import java.time.Instant;
 import java.util.Optional;
 
 public class PageScrapeRepositoryImpl implements PageScrapeRepository {
