@@ -3,7 +3,6 @@ package com.chrishyland.wholewebsitescraper.infrastructure;
 import com.chrishyland.wholewebsitescraper.domain.entity.PageScrape;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.PageScrapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import java.time.Instant;
 
 import java.util.Optional;

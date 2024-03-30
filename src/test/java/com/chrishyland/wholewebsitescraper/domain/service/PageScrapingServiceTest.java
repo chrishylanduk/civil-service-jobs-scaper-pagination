@@ -40,6 +40,7 @@ class PageScrapingServiceTest {
         try {
             Mockito.verify(mockURLScraper, Mockito.never()).getHtmlOfUrl(Mockito.anyString());
         } catch (IOException | InterruptedException e) {
+
         }
     }
 
@@ -56,6 +57,7 @@ class PageScrapingServiceTest {
         try {
             Mockito.verify(mockURLScraper).getHtmlOfUrl(Mockito.anyString());
         } catch (IOException | InterruptedException e) {
+
         }
     }
 }

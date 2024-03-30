@@ -18,11 +18,10 @@ public class SitemapEntryRepositoryImpl implements SitemapEntryRepository {
                 .map(this::sitemapEntryToSitemapEntryPO)
                 .collect(Collectors.toList());
         List<SitemapEntryPO> savedSitemapEntryPOs = repository.saveAll(sitemapEntriesPO);
-        List<SitemapEntry> savedSitemapEntries = savedSitemapEntryPOs.stream()
+
+        return savedSitemapEntryPOs.stream()
                 .map(this::sitemapEntryPOToSitemapEntry)
                 .collect(Collectors.toList());
-
-        return savedSitemapEntries;
     }
 
     @Override

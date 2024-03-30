@@ -64,7 +64,7 @@ public class PageScrapingService {
                 .html(html)
                 .updatedTime(sitemapEntry.getUpdatedTime())
                 .build();
-        PageScrape savedPageScrape = pageScrapeRepository.savePageScrape(pageScrape);
-        return savedPageScrape;
+
+        return pageScrapeRepository.savePageScrape(pageScrape);
     }
 }
