@@ -36,7 +36,7 @@ public class PageScrapingService {
     public void scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List<SitemapEntry> sitemapEntries) {
         for (SitemapEntry sitemapEntry : sitemapEntries) {
             log.info("Starting scrape of {}", sitemapEntry.getUrl());
-            Optional<PageScrape> existingPageScrape = pageScrapeRepository.retrieveLatestScrapeWithGivenURLAndDateUpdated(sitemapEntry.getUrl(), sitemapEntry.getUpdatedTime());
+            Optional<PageScrape> existingPageScrape = pageScrapeRepository.retrieveLatestScrapeWithSpecificURLAndDateUpdated(sitemapEntry.getUrl(), sitemapEntry.getUpdatedTime());
 
             if (existingPageScrape.isPresent()) {
                 log.info("Already have this scrape");

@@ -20,7 +20,11 @@ public class PageScrapeRepositoryImpl implements PageScrapeRepository {
     }
 
     @Override
-    public Optional<PageScrape> retrieveLatestScrapeWithGivenURLAndDateUpdated(String url, Instant updatedTime) {
+    public Optional<PageScrape> retrieveLatestScrapeWithSpecificURLAndDateUpdated(String url, Instant updatedTime) {
+        if (updatedTime == null || url == null) {
+            return Optional.empty();
+        }
+
         PageScrapePO pageScrapePO = repository.findTopByUrlAndUpdatedTimeOrderByScrapeIdDesc(url, updatedTime);
         if (pageScrapePO == null) {
             return Optional.empty();

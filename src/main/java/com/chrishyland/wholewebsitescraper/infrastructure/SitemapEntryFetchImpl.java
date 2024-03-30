@@ -11,9 +11,12 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.DateTimeParseException;
 @Slf4j
 public class SitemapEntryFetchImpl implements SitemapEntryFetch {
 
@@ -31,19 +34,41 @@ public class SitemapEntryFetchImpl implements SitemapEntryFetch {
 
         for (Element page : pages) {
             Element loc = page.getElementsByTag("loc").first();
-            Element lastmod = page.getElementsByTag("lastmod").first();
+            Element lastMod = page.getElementsByTag("lastmod").first();
 
             if (loc != null) {
                 String url = loc.text();
+                Instant updatedTime = null;
 
-                if (lastmod != null) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-                    Instant updatedTime = OffsetDateTime.parse(lastmod.text(), formatter).toInstant();
+                if (lastMod != null) {
+                    updatedTime = parseUpdatedTime(lastMod);
+                }
 
+                if (updatedTime != null) {
                     sitemapEntryList.add(SitemapEntry.builder().url(url).updatedTime(updatedTime).checkedTime(currentTime).build());
+                } else {
+                    sitemapEntryList.add(SitemapEntry.builder().url(url).checkedTime(currentTime).build());
                 }
             }
         }
         return sitemapEntryList;
+    }
+
+    private static Instant parseUpdatedTime(Element lastmod) {
+        DateTimeFormatter formatterWithOffset = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        DateTimeFormatter formatterWithoutOffset = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        Instant updatedTime;
+        try {
+            updatedTime = OffsetDateTime.parse(lastmod.text(), formatterWithOffset).toInstant();
+        } catch (DateTimeParseException e) {
+            try {
+                LocalDateTime dateTime = LocalDateTime.parse(lastmod.text(), formatterWithoutOffset);
+                updatedTime = dateTime.atOffset(ZoneOffset.UTC).toInstant();
+            }
+            catch (DateTimeParseException e2) {
+                updatedTime = null;
+            }
+        }
+        return updatedTime;
     }
 }

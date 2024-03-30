@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface PageScrapeRepository {
     PageScrape savePageScrape(PageScrape pageScrape);
 
-    Optional<PageScrape> retrieveLatestScrapeWithGivenURLAndDateUpdated(String url, Instant updatedTime);
+    Optional<PageScrape> retrieveLatestScrapeWithSpecificURLAndDateUpdated(String url, Instant updatedTime);
 }
