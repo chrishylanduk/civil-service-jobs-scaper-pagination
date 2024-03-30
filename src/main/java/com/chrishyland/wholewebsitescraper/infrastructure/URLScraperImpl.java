@@ -1,6 +1,6 @@
-package com.chrishyland.csjobsdataset.infrastructure;
+package com.chrishyland.wholewebsitescraper.infrastructure;
 
-import com.chrishyland.csjobsdataset.domain.interfaces.URLScraper;
+import com.chrishyland.wholewebsitescraper.domain.interfaces.URLScraper;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

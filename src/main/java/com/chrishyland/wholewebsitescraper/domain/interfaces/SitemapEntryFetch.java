@@ -1,6 +1,6 @@
-package com.chrishyland.csjobsdataset.domain.interfaces;
+package com.chrishyland.wholewebsitescraper.domain.interfaces;
 
-import com.chrishyland.csjobsdataset.domain.entity.SitemapEntry;
+import com.chrishyland.wholewebsitescraper.domain.entity.SitemapEntry;
 
 import java.io.IOException;
 import java.util.List;

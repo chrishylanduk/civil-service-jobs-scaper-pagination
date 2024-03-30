@@ -9,10 +9,11 @@
         <relativePath/>
     </parent>
     <groupId>com.chrishyland</groupId>
-    <artifactId>cs-jobs-dataset</artifactId>
+    <artifactId>whole-website-scraper</artifactId>
     <version>0.0.1</version>
-    <name>CS Jobs Dataset</name>
-    <description>A dataset of scraped CS Jobs</description>
+    <name>Whole website scraper</name>
+    <description>Scrapes an entire website using its sitemap.xml.
+        Subsequent runs only store updated pages.</description>
     <properties>
         <java.version>17</java.version>
     </properties>

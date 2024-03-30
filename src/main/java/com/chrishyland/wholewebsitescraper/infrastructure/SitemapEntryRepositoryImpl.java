@@ -1,7 +1,7 @@
-package com.chrishyland.csjobsdataset.infrastructure;
+package com.chrishyland.wholewebsitescraper.infrastructure;
 
-import com.chrishyland.csjobsdataset.domain.entity.SitemapEntry;
-import com.chrishyland.csjobsdataset.domain.interfaces.SitemapEntryRepository;
+import com.chrishyland.wholewebsitescraper.domain.entity.SitemapEntry;
+import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -21,10 +21,10 @@ public class SitemapEntryRepositoryImpl implements SitemapEntryRepository {
     }
 
     @Override
-    public void replaceLatestSitemapEntryWithSameJcode(SitemapEntry replacementSitemapEntry) {
+    public void replaceLatestSitemapEntryWithSameUrl(SitemapEntry replacementSitemapEntry) {
         SitemapEntryPO replacementSitemapEntryPO = sitemapEntryToSitemapEntryPO(replacementSitemapEntry);
 
-        SitemapEntryPO existingEntryPO = repository.findTopByJcodeOrderByIdDesc(replacementSitemapEntryPO.getJcode());
+        SitemapEntryPO existingEntryPO = repository.findTopByUrlOrderByIdDesc(replacementSitemapEntryPO.getUrl());
         replacementSitemapEntryPO = replacementSitemapEntryPO.toBuilder().id(existingEntryPO.getId()).build();
 
         repository.save(replacementSitemapEntryPO);
@@ -32,10 +32,10 @@ public class SitemapEntryRepositoryImpl implements SitemapEntryRepository {
 
     public SitemapEntryPO sitemapEntryToSitemapEntryPO(SitemapEntry sitemapEntry) {
         return SitemapEntryPO.builder()
-                .jcode(sitemapEntry.getJcode())
+                .url(sitemapEntry.getUrl())
                 .updatedTime(sitemapEntry.getUpdatedTime())
                 .checkedTime(sitemapEntry.getCheckedTime())
-                .scrapeid(sitemapEntry.getScrapeid())
+                .scrape_id(sitemapEntry.getScrape_id())
                 .scrape_is_new(sitemapEntry.getScrape_is_new())
                 .build();
     }

@@ -1,4 +1,4 @@
-package com.chrishyland.csjobsdataset.infrastructure;
+package com.chrishyland.wholewebsitescraper.infrastructure;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "scrapes")
-public class JobScrapePO {
+public class PageScrapePO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scrapeid;
-    private int jcode;
+    private Long scrape_id;
+    private String url;
     private String html;
     private LocalDateTime updatedTime;
     private LocalDateTime scrapedTime;

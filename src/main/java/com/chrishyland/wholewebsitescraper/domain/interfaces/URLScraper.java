@@ -1,4 +1,4 @@
-package com.chrishyland.csjobsdataset.domain.interfaces;
+package com.chrishyland.wholewebsitescraper.domain.interfaces;
 
 import java.io.IOException;
 

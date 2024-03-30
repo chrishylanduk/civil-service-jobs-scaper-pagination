@@ -1,7 +1,7 @@
-package com.chrishyland.csjobsdataset.infrastructure;
+package com.chrishyland.wholewebsitescraper.infrastructure;
 
-import com.chrishyland.csjobsdataset.domain.entity.SitemapEntry;
-import com.chrishyland.csjobsdataset.domain.interfaces.SitemapEntryFetch;
+import com.chrishyland.wholewebsitescraper.domain.entity.SitemapEntry;
+import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryFetch;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,16 +34,13 @@ public class SitemapEntryFetchImpl implements SitemapEntryFetch {
             Element lastmod = page.getElementsByTag("lastmod").first();
 
             if (loc != null) {
-                String[] jcodesplit = loc.text().split("jcode=");
+                String url = loc.text();
 
-
-                if (lastmod != null && jcodesplit.length > 1) {
-                    int jcode = Integer.parseInt(jcodesplit[1]);
-
+                if (lastmod != null) {
                     DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
                     LocalDateTime updatedTime = LocalDateTime.parse(lastmod.text(), formatter);
 
-                    sitemapEntryList.add(SitemapEntry.builder().jcode(jcode).updatedTime(updatedTime).checkedTime(currentTime).build());
+                    sitemapEntryList.add(SitemapEntry.builder().url(url).updatedTime(updatedTime).checkedTime(currentTime).build());
                 }
             }
         }

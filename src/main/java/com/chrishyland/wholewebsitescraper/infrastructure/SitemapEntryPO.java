@@ -1,4 +1,4 @@
-package com.chrishyland.csjobsdataset.infrastructure;
+package com.chrishyland.wholewebsitescraper.infrastructure;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,9 +19,9 @@ public class SitemapEntryPO {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_generator")
     @SequenceGenerator(name = "id_generator", sequenceName = "sitemap_entries_seq", allocationSize = 50)
     private Long id;
-    private int jcode;
+    private String url;
     private LocalDateTime updatedTime;
     private LocalDateTime checkedTime;
-    private int scrapeid;
+    private int scrape_id;
     private Boolean scrape_is_new;
 }
