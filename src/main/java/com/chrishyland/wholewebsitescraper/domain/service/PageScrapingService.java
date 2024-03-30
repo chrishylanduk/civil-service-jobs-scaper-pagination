@@ -7,6 +7,7 @@ import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryFetch;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryRepository;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.URLScraper;
 import lombok.AllArgsConstructor;
+import org.apache.hc.core5.http.ParseException;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -48,14 +49,14 @@ public class PageScrapingService {
                             .scrapeIsNew(true)
                             .scrapeId(savedPageScrape.getScrapeId())
                             .build());
-                } catch (IOException | InterruptedException e) {
+                } catch (IOException | ParseException e) {
                     System.out.println(e.getMessage());
                 }
             }
         }
     }
 
-    private PageScrape scrapeAndSavePageFromSitemapEntry(SitemapEntry sitemapEntry) throws IOException, InterruptedException {
+    private PageScrape scrapeAndSavePageFromSitemapEntry(SitemapEntry sitemapEntry) throws IOException, ParseException {
         String html = urlScraper.getHtmlOfUrl(sitemapEntry.getUrl());
 
         PageScrape pageScrape = PageScrape.builder()

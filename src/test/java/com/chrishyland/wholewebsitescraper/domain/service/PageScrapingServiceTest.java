@@ -6,6 +6,7 @@ import com.chrishyland.wholewebsitescraper.domain.interfaces.PageScrapeRepositor
 import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryFetch;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.SitemapEntryRepository;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.URLScraper;
+import org.apache.hc.core5.http.ParseException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -39,7 +40,7 @@ class PageScrapingServiceTest {
 
         try {
             Mockito.verify(mockURLScraper, Mockito.never()).getHtmlOfUrl(Mockito.anyString());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | ParseException e) {
 
         }
     }
@@ -56,7 +57,7 @@ class PageScrapingServiceTest {
 
         try {
             Mockito.verify(mockURLScraper).getHtmlOfUrl(Mockito.anyString());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | ParseException e) {
 
         }
     }
