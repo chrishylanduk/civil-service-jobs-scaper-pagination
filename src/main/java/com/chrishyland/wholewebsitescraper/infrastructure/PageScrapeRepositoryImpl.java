@@ -32,6 +32,7 @@ public class PageScrapeRepositoryImpl implements PageScrapeRepository {
 
     public PageScrapePO pageScrapeToPageScrapePO(PageScrape pageScrape) {
         return PageScrapePO.builder()
+                .scrapeId(pageScrape.getScrapeId())
                 .scrapedTime(pageScrape.getScrapedTime())
                 .updatedTime(pageScrape.getUpdatedTime())
                 .html(pageScrape.getHtml())
@@ -41,6 +42,7 @@ public class PageScrapeRepositoryImpl implements PageScrapeRepository {
 
     public PageScrape pageScrapePOToPageScrape(PageScrapePO pageScrapePo) {
         return PageScrape.builder()
+                .scrapeId(pageScrapePo.getScrapeId())
                 .scrapedTime(pageScrapePo.getScrapedTime())
                 .updatedTime(pageScrapePo.getUpdatedTime())
                 .html(pageScrapePo.getHtml())
