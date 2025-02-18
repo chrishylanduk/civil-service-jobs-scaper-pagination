@@ -1,4 +1,11 @@
-# Regular whole website scraper by sitemap
+# Civil Service Jobs scraper
+
+----
+NOTE: A quick hacky fork of [https://github.com/chrishylanduk/regular-whole-website-scraper](https://github.com/chrishylanduk/regular-whole-website-scraper) 
+thrown together in an evening after https://www.civilservicejobs.service.gov.uk took down their sitemap.xml some time between 2AM on 17 and 18 February 2025.
+Hopefully it comes back and this can be retired!
+The README below has not been updated.
+----
 
 ## Description
 

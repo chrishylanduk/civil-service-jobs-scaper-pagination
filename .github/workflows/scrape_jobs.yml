@@ -24,7 +24,7 @@ jobs:
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-      SITEMAP_URL: ${{ secrets.SITEMAP_URL }}
+      START_URL: ${{ secrets.START_URL }}
 
     steps:
       - name: Checkout code

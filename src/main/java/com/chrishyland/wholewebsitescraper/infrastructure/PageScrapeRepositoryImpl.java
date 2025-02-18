@@ -4,7 +4,6 @@ import com.chrishyland.wholewebsitescraper.domain.entity.PageScrape;
 import com.chrishyland.wholewebsitescraper.domain.interfaces.PageScrapeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Instant;
 import java.util.Optional;
 
 public class PageScrapeRepositoryImpl implements PageScrapeRepository {
@@ -20,12 +19,12 @@ public class PageScrapeRepositoryImpl implements PageScrapeRepository {
     }
 
     @Override
-    public Optional<PageScrape> retrieveLatestScrapeWithSpecificURLAndDateUpdated(String url, Instant updatedTime) {
-        if (updatedTime == null || url == null) {
+    public Optional<PageScrape> retrieveLatestScrapeWithSpecificURL(String url) {
+        if (url == null) {
             return Optional.empty();
         }
 
-        PageScrapePO pageScrapePO = repository.findTopByUrlAndUpdatedTimeOrderByScrapeIdDesc(url, updatedTime);
+        PageScrapePO pageScrapePO = repository.findTopByUrlOrderByScrapeIdDesc(url);
         if (pageScrapePO == null) {
             return Optional.empty();
         } else {

@@ -24,7 +24,7 @@ public class PageScrapingService {
     private PageScrapeRepository pageScrapeRepository;
     private URLScraper urlScraper;
 
-    public void scrapePagesInSitemap(String sitemapURL) throws IOException {
+    public void scrapeAllPages(String sitemapURL) throws IOException {
         log.info("Started scrape pages");
         List<SitemapEntry> currentSitemapEntries = sitemapEntryFetch.listAllSitemapEntries(sitemapURL);
 
@@ -36,7 +36,7 @@ public class PageScrapingService {
     public void scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List<SitemapEntry> sitemapEntries) {
         for (SitemapEntry sitemapEntry : sitemapEntries) {
             log.info("Starting scrape of {}", sitemapEntry.getUrl());
-            Optional<PageScrape> existingPageScrape = pageScrapeRepository.retrieveLatestScrapeWithSpecificURLAndDateUpdated(sitemapEntry.getUrl(), sitemapEntry.getUpdatedTime());
+            Optional<PageScrape> existingPageScrape = pageScrapeRepository.retrieveLatestScrapeWithSpecificURL(sitemapEntry.getUrl());
 
             if (existingPageScrape.isPresent()) {
                 log.info("Already have this scrape");

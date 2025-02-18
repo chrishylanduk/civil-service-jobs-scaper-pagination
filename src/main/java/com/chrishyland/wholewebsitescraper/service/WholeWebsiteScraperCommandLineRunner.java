@@ -32,7 +32,7 @@ public class WholeWebsiteScraperCommandLineRunner implements CommandLineRunner {
         while (attempt < maxRetries) {
             try {
                 attempt++;
-                pageScrapingService.scrapePagesInSitemap(System.getenv("SITEMAP_URL"));
+                pageScrapingService.scrapeAllPages(System.getenv("START_URL"));
                 log.info("Scraping successful on attempt {}", attempt);
                 break;
             } catch (Exception e) {
@@ -47,6 +47,7 @@ public class WholeWebsiteScraperCommandLineRunner implements CommandLineRunner {
                     }
                 } else {
                     log.error("Max retries reached. Aborting scraping.");
+                    System.exit(1);
                 }
             }
         }

@@ -34,7 +34,7 @@ class PageScrapingServiceTest {
         Instant decemberTwelfth2022 = ZonedDateTime.of(2022, 12, 12, 12, 12, 0, 0, ZoneId.of("UTC")).toInstant();
         SitemapEntry sitemapEntry = SitemapEntry.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
         PageScrape pageScrape = PageScrape.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
-        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeWithSpecificURLAndDateUpdated("https://www.example.com", decemberTwelfth2022)).thenReturn(Optional.of(pageScrape));
+        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeWithSpecificURL("https://www.example.com")).thenReturn(Optional.of(pageScrape));
 
         pageScrapingService.scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List.of(sitemapEntry));
 
@@ -50,7 +50,7 @@ class PageScrapingServiceTest {
         Instant decemberTwelfth2022 = ZonedDateTime.of(2022, 12, 12, 12, 12, 0, 0, ZoneId.of("UTC")).toInstant();
         SitemapEntry sitemapEntry = SitemapEntry.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
         PageScrape pageScrape = PageScrape.builder().url("https://www.example.com").updatedTime(decemberTwelfth2022).build();
-        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeWithSpecificURLAndDateUpdated("https://www.example.com", decemberTwelfth2022)).thenReturn(Optional.empty());
+        Mockito.when(mockPageScrapeRepository.retrieveLatestScrapeWithSpecificURL("https://www.example.com")).thenReturn(Optional.empty());
         Mockito.when(mockPageScrapeRepository.savePageScrape(Mockito.any(PageScrape.class))).thenReturn(pageScrape);
 
         pageScrapingService.scrapePagesIfNotAlreadySavedAndUpdateSitemapEntries(List.of(sitemapEntry));
